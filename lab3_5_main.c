@@ -11,6 +11,7 @@
 * Collaborators:
 * Chris Fox
 * Everett Kennedy
+* Matt Depue
 *
 * Select Statement Resource: http://www.tutorialspoint.com/cprogramming/c_decision_making.htm
 * Find time of exection: http://stackoverflow.com/questions/5248915/execution-time-of-c-program
@@ -44,8 +45,6 @@ int main(){
   int top = 0; // counter
   int selection = 0; // Menu Selection Variable
   
-  //int primary_array[array_size];
-  //int temp_array[array_size];
   int searchfor;
   int found_loc;
 
@@ -55,21 +54,23 @@ int main(){
 	/* Menu */
   printf("\e[1;1H\e[2J");
 
-  int * primary_array = malloc(top * sizeof(int));
-  int * temp_array = malloc(top * sizeof(int)); 
+  int * primary_array = malloc(top * sizeof(int)); // holds main array values
+  int * temp_array = malloc(top * sizeof(int));  // used to hold values while size increases
 
 	//Your code goes here!
-  /*
-  if ( NULL == (primary_array = malloc(array_size * sizeof(int))) ) {
+  
+	
+	// Checks for a failed array creation
+  if ( NULL == (primary_array = malloc(top * sizeof(int))) ) {
   printf("Unsorted Array Malloc Failed\n");
   return(-1);
   }
 
-  if ( NULL == (temp_array = malloc(array_size * sizeof(int))) ) {
+  if ( NULL == (temp_array = malloc(top * sizeof(int))) ) {
   printf("Sorted Array Malloc Failed\n");
   return(-2);
   }
-  */
+  
 
   while (1) 
   {
@@ -179,23 +180,54 @@ int main(){
     else {
       if (top == 0) {
         primary_array[top] = input;
+				top++;
       }
       else {
-        int * temp_array = malloc(top * sizeof(int));
+				primary_array = (int*)realloc(primary_array, sizeof(int)*(top+1));
+				//printf("%d\n",top);
+
+				/*
+				// Checks for a failed array creation
+				if ( NULL == (primary_array = malloc((top+1) * sizeof(int)))) {
+				printf("Unsorted Array Malloc Failed\n");
+				return(-1);
+				}
+				
+        
+				int * temp_array = malloc(top * sizeof(int));
         for (k = 0; k < top; k++)
         {
           temp_array[k] = primary_array[k];
         }
-        primary_array = malloc((top + 1) * sizeof(int));
-        for (k = 0; k < top; k++)
+				free(primary_array);
+   
+				top++;     
+				int * primary_array = malloc(top * sizeof(int));
+				
+				
+				// Checks for a failed array creation
+				if ( NULL == (primary_array = malloc((top * sizeof(int))) ) {
+				printf("Unsorted Array Malloc Failed\n");
+				return(-1);
+				}
+
+				if ( NULL == (temp_array = malloc(top * sizeof(int))) ) {
+				printf("Sorted Array Malloc Failed\n");
+				return(-1);
+				}
+				
+
+				for (k = 0; k < (top-1); k++)
         {
           primary_array[k] = temp_array[k];
         }
-        //printf("%d\n", input);
+				free(temp_array);
+				*/
+        printf("%d\n", top);
         primary_array[top] = input;
         //printf("%d\n", primary_array[top]);
+				top++;
       }
-      top++;
     }
   }
 
