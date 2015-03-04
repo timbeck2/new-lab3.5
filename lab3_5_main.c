@@ -165,7 +165,7 @@ int main(){
             }
         }
         else {
-          printf("The value you searched for was not found");
+          printf("The value you searched for was not found\n\n");
         }
       break;
       default :
