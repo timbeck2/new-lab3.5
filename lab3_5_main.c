@@ -20,10 +20,11 @@
 
 #include <time.h> //for time()
 #include <stdio.h>
+#include <stdlib.h>
 #include "lab3_5_lib.h"
 
 
-/**
+/*
  * Calls the functions implemented in lab3_lib.c and implements a menu system
  * for them.
  *
@@ -36,9 +37,11 @@ int main(){
 	srand(time(NULL));
 
   // Set the array size HERE
-  int array_size = 50; // array size variable initialized to 50 but will be changed by user
-  int temp = 1; // Used to hold good array size in case of new bad size
-  int i; // counter
+  int input;
+  int temp;
+  int i = 0;
+  int k = 0;
+  int top = 0; // counter
   int selection = 0; // Menu Selection Variable
   
   //int primary_array[array_size];
@@ -52,22 +55,11 @@ int main(){
 	/* Menu */
   printf("\e[1;1H\e[2J");
 
-  int * primary_array = malloc(1 * sizeof(int));
-  //int * temp_array = malloc(1 * sizeof(int));  
+  int * primary_array = malloc(top * sizeof(int));
+  int * temp_array = malloc(top * sizeof(int)); 
 
 	//Your code goes here!
-  while (1) {
-    printf("\n\n Please Enter the First integer value of your array\n");
-    scanf("%d", &array_size);
-
-    if (array_size <= 0 || array_size > 70000) {
-      printf("Error, please enter a value between 1 and 70,000\n");
-      }
-    else {
-      break;
-    }
-  }
-
+  /*
   if ( NULL == (primary_array = malloc(array_size * sizeof(int))) ) {
   printf("Unsorted Array Malloc Failed\n");
   return(-1);
@@ -77,104 +69,137 @@ int main(){
   printf("Sorted Array Malloc Failed\n");
   return(-2);
   }
+  */
 
   while (1) 
   {
-    
-    printf("\n\nWhat would you like to do?\n");
-    printf(" 1) Add a value to the Array\n 2) Sort the Array\n 3) Search for a Value in the Array\n-1) Exit\n");
-    scanf("%d", &selection);
-    printf("\e[1;1H\e[2J");
-  
-    switch(selection)
-    {
-    case -1 :
+    printf("Please Enter a positive value that you would like to add to the array.\n\n If you would like to perform another function, enter -1\n");
+    scanf("%d", &input);
+    //printf("%d\n", input); // debugging
+    if (input == -1) {
+      printf("Execute Secondary menu\n");
+      temp = 0;
+
+      printf("\n\nWhat would you like to do?\n");
+      printf(" 1) Add a value to the Array\n 2) Sort the Array\n 3) Search for a Value in the Array\n-1) Exit\n");
+      scanf("%d", &selection);
       printf("\e[1;1H\e[2J");
-      printf("\n\n\nGoodbye... \n\n\n");
-      return 0;
-    case 1 :
-      // 1) Add a value to the Array
-      
+    
+      switch(selection)
+      {
+      case -1 :
+        printf("\e[1;1H\e[2J");
+        printf("\n\n\nGoodbye... \n\n\n");
+        return 0;
+      case 1 :
+        // 1) Add a value to the Array
+        printf("top = %d\n", top);
+        for (k = 0; k < top; k++)
+        {
+          printf("%d\n", primary_array[k]);
+        }
 
-    break;
-    case 2 :
-      //2) Sort the Array
+      break;
+      case 2 :
+        //2) Sort the Array
 
-      printf("Sorting %d values...\n", array_size);
-      generate_random_int_array(primary_array, array_size);
+        printf("Sorting %d values...\n", top);
+        begin = clock();
 
-      begin = clock();
+        insertion_sort(primary_array, top, temp_array);
 
-      insertion_sort(primary_array, array_size, temp_array);
+        end = clock();
+        time_spent = ((double)(end - begin) / CLOCKS_PER_SEC)*1000000; // in microseconds
 
-      end = clock();
-      time_spent = ((double)(end - begin) / CLOCKS_PER_SEC)*1000000; // in microseconds
-      printf("Selection Sort Completed");
-      printf("Execution Time: %lf \n", time_spent);
-    break;
-    case 3 :
-      // Search for a Value in the array
-      printf("What integer value would you like to search for?\n");
-      scanf("%d", &searchfor);
-      generate_random_int_array(primary_array, array_size);
-      
-      printf("Sorting %d values...\n", array_size);
-      begin = clock();
-      insertion_sort(primary_array, array_size, temp_array); 
-      end = clock();
-      
-      time_spent = ((double)(end - begin) / CLOCKS_PER_SEC)*1000000; // in microseconds
-      sort_time_spent = time_spent;
-      total_time_spent = time_spent;
+        for (k = 0; k < top; k++)
+        {
+          primary_array[k] = temp_array[k];
+        }
+        
+        printf("Selection Sort Completed\n");
+        printf("Execution Time: %lf Micro-Seconds\n", time_spent);
+      break;
+      case 3 :
+        // Search for a Value in the array
+        printf("What integer value would you like to search for?\n");
+        scanf("%d", &searchfor);
 
-      printf("Searching for your requested value...\n");
-      begin = clock();
-      binary_search(temp_array, array_size, searchfor, &found_loc);
-      end = clock();
-      
-      time_spent = ((double)(end - begin) / CLOCKS_PER_SEC)*1000000; // in microseconds
-      total_time_spent = total_time_spent + time_spent;
-      
-      // Output Results
-      printf("\n\nTime Spent Sorting:                     %lf \n", sort_time_spent);
-      printf("Time Spent Searching:                   %lf \n", time_spent);
-      printf("Total Time Spent Sorting and Searching: %lf \n", total_time_spent);
-      
-      if (found_loc != -1) {
-        printf("\nThe binary search found the value \"%d\" in the array!\nLocation in Array = %d\n\n", searchfor, found_loc);
+        printf("Sorting %d values...\n", top);
+        begin = clock();
+        insertion_sort(primary_array, top, temp_array); 
+        end = clock();
+        
+        time_spent = ((double)(end - begin) / CLOCKS_PER_SEC)*1000000; // in microseconds
+        sort_time_spent = time_spent;
+        total_time_spent = time_spent;
 
-        printf("Here are the surrounding 5 numbers around the found number\n");
+        printf("Searching for your requested value...\n");
+        begin = clock();
+        binary_search(temp_array, top, searchfor, &found_loc);
+        end = clock();
+        
+        time_spent = ((double)(end - begin) / CLOCKS_PER_SEC)*1000000; // in microseconds
+        total_time_spent = total_time_spent + time_spent;
+        
+        // Output Results
+        printf("\n\nTime Spent Sorting:                     %lf Micro-Seconds \n", sort_time_spent);
+        printf("Time Spent Searching:                   %lf  Micro-Seconds\n", time_spent);
+        printf("Total Time Spent Sorting and Searching: %lf Micro-Seconds\n", total_time_spent);
+        
+        if (found_loc != -1) {
+          printf("\nThe binary search found the value \"%d\" in the array!\nLocation in Array = %d\n\n", searchfor, found_loc);
 
-        for (i = (found_loc - 5); i <= found_loc + 5; i++)
-          { 
-            if (i < 0) {
-              // do nothing
-            } 
-            else if (i == found_loc) {
-              printf("%d) %d <-- Your Searched Value!\n", i, temp_array[i]);
-            } 
-            else {
-              printf("%d) %d\n", i, temp_array[i]);
+          printf("Here are the surrounding 5 numbers around the found number\n");
+
+          for (i = (found_loc - 5); i <= found_loc + 5; i++)
+            { 
+              if (i < 0) {
+                // do nothing
+              } 
+              else if (i >= top) {
+                //do nothing
+              }
+              else if (i == found_loc) {
+                printf("%d) %d <-- Your Searched Value!\n", i, temp_array[i]);
+              } 
+              else {
+                printf("%d) %d\n", i, temp_array[i]);
+              }
             }
-          }
+        }
+        else {
+          printf("The value you searched for was not found");
+        }
+      break;
+      default :
+        //Option if an invalid selection is made
+        printf("You did not make a valid selection.\n" );
+      }
+    }
+    else {
+      printf("Else Statement triggered\n");
+      
+      if (top == 0) {
+        primary_array[top] = input;
       }
       else {
-        printf("The value you searched for was not found");
+        int * temp_array = malloc(top * sizeof(int));
+        for (k = 0; k < top; k++)
+        {
+          temp_array[k] = primary_array[k];
+        }
+        primary_array = malloc((top + 1) * sizeof(int));
+        for (k = 0; k < top; k++)
+        {
+          primary_array[k] = temp_array[k];
+        }
+        //printf("%d\n", input);
+        primary_array[top] = input;
+        //printf("%d\n", primary_array[top]);
       }
-    break;
-    
-    case 5 :
-      // Option for Binary Search
-      
-      
-
-    break;
-    default :
-      //Option if an invalid selection is made
-      printf("You did not make a valid selection.\n" );
+      top++;
     }
   }
-
 
 	/* Wrap up */
   //free(primary_array);
