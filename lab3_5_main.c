@@ -20,7 +20,7 @@
 
 #include <time.h> //for time()
 #include <stdio.h>
-#include "lab3_lib.h"
+#include "lab3_5_lib.h"
 
 
 /**
@@ -41,8 +41,8 @@ int main(){
   int i; // counter
   int selection = 0; // Menu Selection Variable
   
-  //int unsorted_arr[array_size];
-  //int sorted_arr[array_size];
+  //int primary_array[array_size];
+  //int temp_array[array_size];
   int searchfor;
   int found_loc;
 
@@ -52,10 +52,12 @@ int main(){
 	/* Menu */
   printf("\e[1;1H\e[2J");
 
+  int * primary_array = malloc(1 * sizeof(int));
+  //int * temp_array = malloc(1 * sizeof(int));  
 
 	//Your code goes here!
   while (1) {
-    printf("\n\n How big of an array would you like to sort or search?\n");
+    printf("\n\n Please Enter the First integer value of your array\n");
     scanf("%d", &array_size);
 
     if (array_size <= 0 || array_size > 70000) {
@@ -66,15 +68,12 @@ int main(){
     }
   }
 
-  int * unsorted_arr = malloc(array_size * sizeof(int));
-  int * sorted_arr = malloc(array_size * sizeof(int));
-
-  if ( NULL == (unsorted_arr = malloc(array_size * sizeof(int))) ) {
+  if ( NULL == (primary_array = malloc(array_size * sizeof(int))) ) {
   printf("Unsorted Array Malloc Failed\n");
   return(-1);
   }
 
-  if ( NULL == (sorted_arr = malloc(array_size * sizeof(int))) ) {
+  if ( NULL == (temp_array = malloc(array_size * sizeof(int))) ) {
   printf("Sorted Array Malloc Failed\n");
   return(-2);
   }
@@ -83,7 +82,7 @@ int main(){
   {
     
     printf("\n\nWhat would you like to do?\n");
-    printf(" 1) Bubble Sort\n 2) Selection Sort\n 3) Insertion Sort\n 4) Linear Search\n 5) Binary Search\n 6) Change Array Size\n-1) Exit\n");
+    printf(" 1) Add a value to the Array\n 2) Sort the Array\n 3) Search for a Value in the Array\n-1) Exit\n");
     scanf("%d", &selection);
     printf("\e[1;1H\e[2J");
   
@@ -94,27 +93,19 @@ int main(){
       printf("\n\n\nGoodbye... \n\n\n");
       return 0;
     case 1 :
-      // Option to Bubble Sort
-      printf("Sorting %d values...\n", array_size);
-      generate_random_int_array(unsorted_arr, array_size);
+      // 1) Add a value to the Array
+      
 
-      begin = clock();
-
-      bubble_sort(unsorted_arr, array_size, sorted_arr);
-
-      end = clock();
-      printf("Sorting Completed Successfully\n");
-      time_spent = ((double)(end - begin) / CLOCKS_PER_SEC)*1000000; // microseconds
-      printf("Execution Time: %lf \n", time_spent);
     break;
     case 2 :
-      //Option to Selection Sort
+      //2) Sort the Array
+
       printf("Sorting %d values...\n", array_size);
-      generate_random_int_array(unsorted_arr, array_size);
+      generate_random_int_array(primary_array, array_size);
 
       begin = clock();
 
-      selection_sort(unsorted_arr, array_size, sorted_arr);
+      insertion_sort(primary_array, array_size, temp_array);
 
       end = clock();
       time_spent = ((double)(end - begin) / CLOCKS_PER_SEC)*1000000; // in microseconds
@@ -122,71 +113,14 @@ int main(){
       printf("Execution Time: %lf \n", time_spent);
     break;
     case 3 :
-      // Option to Insertion Sort
-
-      printf("Sorting %d values...\n", array_size);
-      generate_random_int_array(unsorted_arr, array_size);
-
-      begin = clock();
-
-      insertion_sort(unsorted_arr, array_size, sorted_arr);
-
-      end = clock();
-      time_spent = ((double)(end - begin) / CLOCKS_PER_SEC)*1000000; // in microseconds
-
-      /*for (i = 0; i < array_size; i++)
-        {
-        //printf("%d) %d\n", i+1, sorted_arr[i]);
-      }*/
-      printf("Execution Time: %lf \n", time_spent);
-    break;
-    case 4 :
-      //Option for Linear Search
-
+      // Search for a Value in the array
       printf("What integer value would you like to search for?\n");
       scanf("%d", &searchfor);
-      generate_random_int_array(unsorted_arr, array_size);
-      
-      begin = clock();
-
-      linear_search(unsorted_arr, array_size, searchfor, &found_loc);
-      
-      end = clock();
-      time_spent = ((double)(end - begin) / CLOCKS_PER_SEC)*1000000; // in microseconds
-      printf("\n\nExecution Time: %lf \n", time_spent);
-      
-      if (found_loc != -1) {
-        printf("\nThe linear search found the value %d in the array!\nLocation in Array = %d\n\n", searchfor, found_loc);
-
-        printf("Here are the surrounding 5 numbers around the found number\n");
-
-        for (i = (found_loc - 5); i <= found_loc + 5; i++)
-          { 
-            if (i < 0) {
-              // do nothing
-            } 
-            else if (i == found_loc) {
-              printf("%d) %d <-- Your Searched Value!\n", i, unsorted_arr[i]);
-            } 
-            else {
-              printf("%d) %d\n", i, unsorted_arr[i]);
-            }
-          }
-      }
-      else {
-        printf("The value you searched for was not found");
-      }
-    break;
-    case 5 :
-      // Option for Binary Search
-      
-      printf("What integer value would you like to search for?\n");
-      scanf("%d", &searchfor);
-      generate_random_int_array(unsorted_arr, array_size);
+      generate_random_int_array(primary_array, array_size);
       
       printf("Sorting %d values...\n", array_size);
       begin = clock();
-      insertion_sort(unsorted_arr, array_size, sorted_arr); 
+      insertion_sort(primary_array, array_size, temp_array); 
       end = clock();
       
       time_spent = ((double)(end - begin) / CLOCKS_PER_SEC)*1000000; // in microseconds
@@ -195,7 +129,7 @@ int main(){
 
       printf("Searching for your requested value...\n");
       begin = clock();
-      binary_search(sorted_arr, array_size, searchfor, &found_loc);
+      binary_search(temp_array, array_size, searchfor, &found_loc);
       end = clock();
       
       time_spent = ((double)(end - begin) / CLOCKS_PER_SEC)*1000000; // in microseconds
@@ -217,49 +151,23 @@ int main(){
               // do nothing
             } 
             else if (i == found_loc) {
-              printf("%d) %d <-- Your Searched Value!\n", i, sorted_arr[i]);
+              printf("%d) %d <-- Your Searched Value!\n", i, temp_array[i]);
             } 
             else {
-              printf("%d) %d\n", i, sorted_arr[i]);
+              printf("%d) %d\n", i, temp_array[i]);
             }
           }
       }
       else {
         printf("The value you searched for was not found");
       }
-
     break;
-    case 6 :
-      // Option To Change Array Size
-      printf("\n\n How big of an array would you like to sort or search?\n");
-      scanf("%d", &temp);
+    
+    case 5 :
+      // Option for Binary Search
+      
+      
 
-      if (temp <= 0 || temp > 70000) {
-        printf("Error, please enter a value between 1 and 70,000\n");
-      }
-      else {
-
-        array_size = temp;
-        
-        // Clear previous arrays from memory
-        //free(unsorted_arr);
-        //free(sorted_arr);
-
-        // Create new arrays with new size
-        int * unsorted_arr = malloc(array_size * sizeof(int));
-        int * sorted_arr = malloc(array_size * sizeof(int));
-
-        // Error Check for failed array creation
-        if ( NULL == (unsorted_arr = malloc(array_size * sizeof(int))) ) {
-        printf("Unsorted Array Malloc Failed\n");
-        return(-1);
-        }
-
-        if ( NULL == (sorted_arr = malloc(array_size * sizeof(int))) ) {
-        printf("Sorted Array Malloc Failed\n");
-        return(-2);
-        }
-      }      
     break;
     default :
       //Option if an invalid selection is made
@@ -269,8 +177,8 @@ int main(){
 
 
 	/* Wrap up */
-  //free(unsorted_arr);
-  //free(sorted_arr);
+  //free(primary_array);
+  //free(temp_array);
 
 	return 0;
 }
