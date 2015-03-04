@@ -73,15 +73,14 @@ int main(){
 
   while (1) 
   {
-    printf("Please Enter a positive value that you would like to add to the array.\n\n If you would like to perform another function, enter -1\n");
+    printf("Please Enter a positive value that you would like to add to the array.\n To perform other functions, enter -1\n");
     scanf("%d", &input);
     //printf("%d\n", input); // debugging
     if (input == -1) {
-      printf("Execute Secondary menu\n");
       temp = 0;
 
       printf("\n\nWhat would you like to do?\n");
-      printf(" 1) Add a value to the Array\n 2) Sort the Array\n 3) Search for a Value in the Array\n-1) Exit\n");
+      printf(" 1) View the Array\n 2) Sort the Array\n 3) Search for a Value in the Array\n-1) Exit\n");
       scanf("%d", &selection);
       printf("\e[1;1H\e[2J");
     
@@ -92,13 +91,11 @@ int main(){
         printf("\n\n\nGoodbye... \n\n\n");
         return 0;
       case 1 :
-        // 1) Add a value to the Array
-        printf("top = %d\n", top);
+        // 1) View Values in the Array
         for (k = 0; k < top; k++)
         {
           printf("%d\n", primary_array[k]);
         }
-
       break;
       case 2 :
         //2) Sort the Array
@@ -176,9 +173,10 @@ int main(){
         printf("You did not make a valid selection.\n" );
       }
     }
+    // ===========================================================
+    // If -1 is not entered, continues to add integer to the array
+    // ===========================================================
     else {
-      printf("Else Statement triggered\n");
-      
       if (top == 0) {
         primary_array[top] = input;
       }
