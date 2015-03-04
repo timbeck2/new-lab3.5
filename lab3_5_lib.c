@@ -17,7 +17,7 @@
 #include <stdio.h>
 #include <string.h> //for memcpy
 
-#include "lab3_lib.h"
+#include "lab3_5_lib.h"
 
 /*
  * Pro-tip: use this function to copy arrays.
