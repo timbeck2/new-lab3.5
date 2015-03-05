@@ -1,12 +1,12 @@
-/** lab3_main.c: Implements a front end for lab3_lib.c.
+/** lab3_main.c: Implements a front end for lab3_5_lib.c.
 *
 *
 * Name: Timothy Becker
 * Email: becker43@purdue.edu
 * Course: CNIT 315
 * Lab batch: 008
-* Lab assignment: 3
-* Date: Feb 17, 2015
+* Lab assignment: 3.5
+* Date: March 4, 2015
 *
 * Collaborators:
 * Chris Fox
@@ -45,8 +45,8 @@ int main(){
   int top = 0; // counter
   int selection = 0; // Menu Selection Variable
   
-  int searchfor;
-  int found_loc;
+  int searchfor; //value to search with binary search
+  int found_loc; // location of searched for value by binary
 
   clock_t begin, end;
   double time_spent, sort_time_spent = 0, total_time_spent = 0;
@@ -56,6 +56,7 @@ int main(){
 
   int * primary_array = malloc(top * sizeof(int)); // holds main array values
   int * temp_array = malloc(top * sizeof(int));  // used to hold values while size increases
+
 
 	//Your code goes here!
   
@@ -183,10 +184,20 @@ int main(){
 				top++;
       }
       else {
+
+        temp_array = malloc(top * sizeof(int));
+        int * temp_array = malloc(top * sizeof(int));  // used to hold values while size increases
+        temp_array = primary_array;
 				primary_array = (int*)realloc(primary_array, sizeof(int)*(top+1));
 
-				primary_array[top] = input;
-        
+        if (primary_array == NULL) {
+        fprintf(stderr, "failed to allocate memory, reverting to previous state\n");
+        primary_array = temp_array;
+        }
+        else {
+          primary_array[top] = input;
+        }
+
 				//printf("%d\n", primary_array[top]); // debugging
 				top++;
       }
